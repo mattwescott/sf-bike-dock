@@ -80,6 +80,22 @@ angular.module('sfBikeDock')
 
     var findNearByParking = function() {
 
+      /*
+      var config = {
+        params: {
+          lat: $scope.myLat,
+          lng: $scope.myLng
+        }
+      };
+
+      $http.get('/api', config)
+        .success(function(response) {
+          console.log('got nearby parking.');
+          console.log(response);
+
+        });
+      */
+
       var key = '1';
       $scope.markers[key] = {
         lat: 37.74883300,
@@ -140,7 +156,6 @@ angular.module('sfBikeDock')
       };
       $scope.markers[key].icon = bikeIcon;
 
-
     };
 
 
@@ -167,10 +182,7 @@ angular.module('sfBikeDock')
 
       modalInstance.close();
 
-      //TODO: Call API to add nearby bike parking...
       findNearByParking();
-
-
     };
 
 
