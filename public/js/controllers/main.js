@@ -99,11 +99,13 @@ angular.module('sfBikeDock')
         lng: -122.42,
         zoom: 13
       },
+      /*
       legend: {
         position: 'bottomleft',
         colors: [ '#d04e4b', '#4394dd', '#9dbad0' ],
         labels: [ 'Very High', 'High', 'Medium' ]
       },
+      */
       layers: {
         baselayers: {
           googleRoadmap: {
@@ -111,7 +113,6 @@ angular.module('sfBikeDock')
             layerType: 'ROADMAP',
             type: 'google'
           },
-          /*
           googleHybrid: {
             name: 'Google Hybrid',
             layerType: 'HYBRID',
@@ -122,6 +123,7 @@ angular.module('sfBikeDock')
             layerType: 'TERRAIN',
             type: 'google'
           },
+          /*
           osm: {
             name: 'OpenStreetMap',
             url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
