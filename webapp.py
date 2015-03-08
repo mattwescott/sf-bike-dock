@@ -1,11 +1,14 @@
+import os
+import io
+import re
+
+import requests
+
+import pandas as pd
+
 from flask import Flask, render_template
 from flask.ext.script import Manager
 from flask.ext.bootstrap import Bootstrap
-import pandas as pd
-import boto
-import io
-import os
-import re
 
 
 app = Flask(__name__)
@@ -16,18 +19,10 @@ manager = Manager(app)
 def load_data_from_S3():
     print('Loading data from S3...')
 
-    # Load the data from S3
-    #https://s3-us-west-1.amazonaws.com/bike-parking/sf_bike_public_parking.csv
-    s3_bucket = 'bike-parking'
-    s3_key = 'sf_bike_public_parking.csv'
-
-    conn = boto.connect_s3()
-
-    bucket = conn.get_bucket(s3_bucket)
-    str_data = bucket.get_key(s3_key).get_contents_as_string()
-    str_data = io.StringIO(unicode(str_data, 'utf-8'))
-
-    df = pd.read_csv(str_data)
+    url = 'https://s3-us-west-1.amazonaws.com/bike-parking/sf_bike_public_parking.csv'
+    csv_str = requests.get(url).content
+    csv_buffer = io.StringIO(unicode(csv_str, 'utf-8'))
+    df = pd.read_csv(csv_buffer)
     lat_lng_values = df.COORDINATES.apply(parse_lat_long_values, axis=0)
 
 def parse_lat_long_values(coord_str, axis):
