@@ -97,7 +97,7 @@ angular.module('sfBikeDock')
       sanfrancisco: {
         lat: 37.77,
         lng: -122.42,
-        zoom: 15 //13
+        zoom: 13
       },
       legend: {
         position: 'bottomleft',
@@ -159,10 +159,14 @@ angular.module('sfBikeDock')
       $scope.markers['me'] = {
         lat: lat,
         lng: lng,
-        message: 'This is you.',
+        message: 'Your Location',
         focus: true,
         draggable: false
       };
+
+      $scope.sanfrancisco.lat = lat;
+      $scope.sanfrancisco.lng = lng;
+      $scope.sanfrancisco.zoom = 16;
 
       modalInstance.close();
     };
