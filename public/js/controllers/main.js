@@ -8,7 +8,7 @@
  * Controller of the sfBikeDock
  */
 angular.module('sfBikeDock')
-  .controller('MainCtrl', function ($scope, dataloader, geocode) {
+  .controller('MainCtrl', function ($modal, $scope, dataloader, geocode) {
 
     //*******************************
     // Map Handling
@@ -97,7 +97,7 @@ angular.module('sfBikeDock')
       sanfrancisco: {
         lat: 37.77,
         lng: -122.42,
-        zoom: 13
+        zoom: 15 //13
       },
       legend: {
         position: 'bottomleft',
@@ -135,7 +135,7 @@ angular.module('sfBikeDock')
 
     var incidentsDict = {};
 
-
+/*
     dataloader.fetch('incidents_dict').then(function(data) {
       incidentsDict = data;
 
@@ -147,8 +147,60 @@ angular.module('sfBikeDock')
       });
 
     });
+*/
 
 
 
+    function successFunction(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      console.log('Your latitude is: ' + lat + ' and longitude is: ' + lng);
 
-  });
+      $scope.markers['me'] = {
+        lat: lat,
+        lng: lng,
+        message: 'This is you.',
+        focus: true,
+        draggable: false
+      };
+
+      modalInstance.close();
+    };
+
+
+
+    function errorFunction(error) {
+      console.log('Error getting location:');
+      console.log(error);
+
+      modalInstance.close();
+    };
+
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+    } else {
+      console.log('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
+    }
+
+
+
+    var modalInstance = $modal.open({
+      templateUrl: 'views/startup.html',
+      controller: 'ModalStartupCtrl',
+      size: 'sm'
+    });
+
+
+
+  }
+)
+.controller('ModalStartupCtrl',
+  function ($scope, $modalInstance) {
+
+    $scope.cancel = function() {
+      $modalInstance.close();
+    };
+
+  }
+);
