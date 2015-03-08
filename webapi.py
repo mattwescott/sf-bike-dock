@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask.ext.script import Manager
 from geopy.distance import vincenty
 import pandas as pd
@@ -85,7 +85,12 @@ def find_nearest_bike_parking():
         except:
             return jsonify({'msg': 'Invalid n value passed'}), 400
 
-    return lookup_nearest_spots(lat, lng, n), 200
+    json_results = lookup_nearest_spots(lat, lng, n)
+    response = Response(response=json_results, status=200,
+                        mimetype='application/json')
+    response.headers['Access-Control-Allow-Origin'] = 'http://192.168.1.147:5000'
+
+    return response
 
 
 if __name__ == '__main__':
