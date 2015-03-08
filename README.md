@@ -1,8 +1,8 @@
 ## Install Python packages
 pip install -r requirements.txt
 
-## Run the web app
-python webapp.py runserver
+## Start the web api
+python webapi.py runserver
 
 ## Angular App
 To run the Angular app (stand-alone), first install dependencies using 'bower install'.
