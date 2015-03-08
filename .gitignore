@@ -1,3 +1,7 @@
+.DS_Store
+public/lib
+.bower-*/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
