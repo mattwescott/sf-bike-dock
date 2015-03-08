@@ -21,13 +21,7 @@ def load_data_from_S3():
     s3_bucket = 'bike-parking'
     s3_key = 'sf_bike_public_parking.csv'
 
-    if (os.environ.get('AWS_ACCESS_KEY_ID') and
-        os.environ.get('AWS_SECRET_ACCESS_KEY')):
-        # Read credentials from environment variables
-        conn = boto.connect_s3()
-    else:
-        # Assume Nick is running the app, so read credentials from profile
-        conn = boto.connect_s3(profile_name='nick')
+    conn = boto.connect_s3()
 
     bucket = conn.get_bucket(s3_bucket)
     str_data = bucket.get_key(s3_key).get_contents_as_string()
@@ -69,7 +63,7 @@ def find_nearest_bike_parking():
     lng_str = request.args.get('long')
     n = request.args.get('n')
 
-    lat, lng = lat_lng_to_numeric(lat_str, lng_str):
+    lat, lng = lat_lng_to_numeric(lat_str, lng_str)
 
     if lat is None or lng is None:
         return
@@ -85,12 +79,12 @@ def find_nearest_bike_parking():
     return jsonify(lookup_nearest_spots(lat, lng, n))
 
 
-def lookup_nearest_spots(lat, lng, n):
+#def lookup_nearest_spots(lat, lng, n):
 
 
 
 if __name__ == '__main__':
-    bike_df = load_data_from_S3()
 
+    bike_df = load_data_from_S3()
     manager.run()
 
