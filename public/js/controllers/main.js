@@ -14,29 +14,196 @@ angular.module('sfBikeDock')
     // Map Handling
     //*******************************
 
-    var lowIcon = {
+    var meIcon = {
         type: 'makiMarker',
-        icon: 'circle',
-        color: '#9dbad0',
+        icon: 'marker',
+        color: '#d04e4b',
         size: 's'
     };
 
-    var mediumIcon = {
+    var bikeIcon = {
         type: 'makiMarker',
-        icon: 'square',
+        icon: 'bicycle',
         color: '#4394dd',
         size: 'm'
     };
 
-    var highIcon = {
-        type: 'makiMarker',
-        icon: 'triangle',
-        color: '#d04e4b',
-        size: 'l'
+
+    $scope.markers = {};
+
+    //Maps
+    angular.extend($scope, {
+      sanfrancisco: {
+        lat: 37.77,
+        lng: -122.42,
+        zoom: 13
+      },
+      /*
+      legend: {
+        position: 'bottomleft',
+        colors: [ '#d04e4b', '#4394dd', '#9dbad0' ],
+        labels: [ 'Very High', 'High', 'Medium' ]
+      },
+      */
+      layers: {
+        baselayers: {
+          googleRoadmap: {
+            name: 'Google Streets',
+            layerType: 'ROADMAP',
+            type: 'google'
+          },
+          googleHybrid: {
+            name: 'Google Hybrid',
+            layerType: 'HYBRID',
+            type: 'google'
+          },
+          googleTerrain: {
+            name: 'Google Terrain',
+            layerType: 'TERRAIN',
+            type: 'google'
+          },
+          /*
+          osm: {
+            name: 'OpenStreetMap',
+            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            type: 'xyz'
+          },
+          */
+        }
+      }
+    });
+
+
+    //*******************************
+    // Find Nearby Parking
+    //*******************************
+
+    var findNearByParking = function() {
+
+      var key = '1';
+      $scope.markers[key] = {
+        lat: 37.74883300,
+        lng: -122.41772000,
+        message: 'Paisano\'s',
+        focus: false,
+        draggable: false
+      };
+      $scope.markers[key].icon = bikeIcon;
+
+      key = '2';
+      $scope.markers[key] = {
+        lat: 37.74849700,
+        lng: -122.41866200,
+        message: 'Mermaid Tattoo',
+        focus: false,
+        draggable: false
+      };
+      $scope.markers[key].icon = bikeIcon;
+
+      key = '3';
+      $scope.markers[key] = {
+        lat: 37.74785345,
+        lng: -122.41817051,
+        message: 'Carecen',
+        focus: false,
+        draggable: false
+      };
+      $scope.markers[key].icon = bikeIcon;
+
+      key = '4';
+      $scope.markers[key] = {
+        lat: 37.74751200,
+        lng: -122.41830800,
+        message: 'medical building',
+        focus: false,
+        draggable: false
+      };
+      $scope.markers[key].icon = bikeIcon;
+
+      key = '5';
+      $scope.markers[key] = {
+        lat: 37.74764800,
+        lng: -122.41944900,
+        message: 'Career Link Center',
+        focus: false,
+        draggable: false
+      };
+      $scope.markers[key].icon = bikeIcon;
+
+      key = '6';
+      $scope.markers[key] = {
+        lat: 37.74699800,
+        lng: -122.41865300,
+        message: 'Coffee Shop',
+        focus: false,
+        draggable: false
+      };
+      $scope.markers[key].icon = bikeIcon;
+
+
     };
 
 
-    $scope.markers = {};
+    //*******************************
+    // GeoLocation
+    //*******************************
+
+    function successFunction(position) {
+      $scope.myLat = position.coords.latitude;
+      $scope.myLng = position.coords.longitude;
+
+      $scope.markers['me'] = {
+        lat: $scope.myLat,
+        lng: $scope.myLng,
+        message: 'Your Location',
+        focus: true,
+        draggable: false
+      };
+      $scope.markers['me'].icon = meIcon;
+
+      $scope.sanfrancisco.lat = $scope.myLat;
+      $scope.sanfrancisco.lng = $scope.myLng;
+      $scope.sanfrancisco.zoom = 18;
+
+      modalInstance.close();
+
+      //TODO: Call API to add nearby bike parking...
+      findNearByParking();
+
+
+    };
+
+
+    function errorFunction(error) {
+      console.log('Error getting location:');
+      console.log(error);
+      modalInstance.close();
+    };
+
+
+    var modalInstance;
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+
+      modalInstance = $modal.open({
+        templateUrl: 'views/startup.html',
+        controller: 'ModalStartupCtrl',
+        size: 'sm'
+      });
+    }
+    else {
+      alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser that supports it.');
+    }
+
+
+
+/*
+    //*******************************
+    // Old Code from Bayes Impact
+    //*******************************
+
+    var incidentsDict = {};
 
     var addLocationToMap = function(data, location) {
 
@@ -92,52 +259,6 @@ angular.module('sfBikeDock')
     };
 
 
-    //Maps
-    angular.extend($scope, {
-      sanfrancisco: {
-        lat: 37.77,
-        lng: -122.42,
-        zoom: 13
-      },
-      /*
-      legend: {
-        position: 'bottomleft',
-        colors: [ '#d04e4b', '#4394dd', '#9dbad0' ],
-        labels: [ 'Very High', 'High', 'Medium' ]
-      },
-      */
-      layers: {
-        baselayers: {
-          googleRoadmap: {
-            name: 'Google Streets',
-            layerType: 'ROADMAP',
-            type: 'google'
-          },
-          googleHybrid: {
-            name: 'Google Hybrid',
-            layerType: 'HYBRID',
-            type: 'google'
-          },
-          googleTerrain: {
-            name: 'Google Terrain',
-            layerType: 'TERRAIN',
-            type: 'google'
-          },
-          /*
-          osm: {
-            name: 'OpenStreetMap',
-            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            type: 'xyz'
-          },
-          */
-        }
-      }
-    });
-
-
-    var incidentsDict = {};
-
-/*
     dataloader.fetch('incidents_dict').then(function(data) {
       incidentsDict = data;
 
@@ -150,53 +271,6 @@ angular.module('sfBikeDock')
 
     });
 */
-
-
-
-    function successFunction(position) {
-      var lat = position.coords.latitude;
-      var lng = position.coords.longitude;
-      console.log('Your latitude is: ' + lat + ' and longitude is: ' + lng);
-
-      $scope.markers['me'] = {
-        lat: lat,
-        lng: lng,
-        message: 'Your Location',
-        focus: true,
-        draggable: false
-      };
-
-      $scope.sanfrancisco.lat = lat;
-      $scope.sanfrancisco.lng = lng;
-      $scope.sanfrancisco.zoom = 16;
-
-      modalInstance.close();
-    };
-
-
-
-    function errorFunction(error) {
-      console.log('Error getting location:');
-      console.log(error);
-
-      modalInstance.close();
-    };
-
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
-    } else {
-      console.log('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
-    }
-
-
-
-    var modalInstance = $modal.open({
-      templateUrl: 'views/startup.html',
-      controller: 'ModalStartupCtrl',
-      size: 'sm'
-    });
-
 
 
   }
