@@ -1,20 +1,18 @@
-import os
+from flask import Flask, jsonify, request, Response
+from flask.ext.script import Manager
+from flask.ext.cors import CORS
+from geopy.distance import vincenty
+import pandas as pd
 import io
 import re
-
 import requests
-
-import pandas as pd
-
-from geopy.distance import vincenty
-
-from flask import Flask, render_template
-from flask.ext.script import Manager
-from flask.ext.bootstrap import Bootstrap
 
 
 app = Flask(__name__, static_url_path='')
 manager = Manager(app)
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 def load_data_from_S3():
@@ -25,7 +23,7 @@ def load_data_from_S3():
     csv_buffer = io.StringIO(unicode(csv_str, 'utf-8'))
     df = pd.read_csv(csv_buffer)
     lat_lng_series = df.COORDINATES.apply(parse_lat_long_values)
-    df['LAT_LNG'] = lat_lng_series
+    df['LAT_LONG'] = lat_lng_series
     return df
 
 
@@ -53,14 +51,14 @@ def lat_lng_to_numeric(lat_str, lng_str):
 
 def lookup_nearest_spots(lat, lng, n):
     # Compute distance between user lat/lng and each bike parking lat/lng
-    dists = bike_df['LAT_LNG'].apply(lambda x: vincenty(x, (lat, lng)).ft)
+    dists = bike_df['LAT_LONG'].apply(lambda x: vincenty(x, (lat, lng)).ft)
 
     # Sort distances in ascending order and select the first n values
     dists.sort()
     idx = dists.index.tolist()[:n]
 
-    # Return entries as JSON
-    return bike_df.iloc[idx].to_json()
+    # Return entries as JSON records
+    return bike_df.iloc[idx].to_json(orient='records')
 
 
 @app.route('/')
@@ -90,7 +88,14 @@ def find_nearest_bike_parking():
         except:
             return None
 
-    return lookup_nearest_spots(lat, lng, n), 200
+    json_results = lookup_nearest_spots(lat, lng, n)
+    response = Response(response=json_results, status=200,
+                        mimetype='application/json')
+
+    # Using Flask-Cors so shouldn't need this
+    #response.headers['Access-Control-Allow-Origin'] = 'http://192.168.1.147:5000'
+
+    return response
 
 
 if __name__ == '__main__':
