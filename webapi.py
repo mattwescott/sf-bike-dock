@@ -13,6 +13,12 @@ manager = Manager(app)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.debug=True
+
+
+@app.route('/', methods=['GET'])
+def index():
+    return app.send_static_file('index.html')
 
 
 def load_data_from_S3():
