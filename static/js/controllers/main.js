@@ -87,7 +87,7 @@ angular.module('sfBikeDock')
         }
       };
 
-      $http.get('http://192.168.1.30:5001/api/bike_parking', config)
+      $http.get('/api/bike_parking', config)
         .success(function(parkingSpots) {
           var key = 0;
 
