@@ -8,7 +8,7 @@
  * Controller of the sfBikeDock
  */
 angular.module('sfBikeDock')
-  .controller('MainCtrl', function ($http, $modal, $scope, dataloader, geocode) {
+  .controller('MainCtrl', function ($http, $modal, $scope) {
 
     //*******************************
     // Map Handling
@@ -79,83 +79,37 @@ angular.module('sfBikeDock')
     //*******************************
 
     var findNearByParking = function() {
-
       var config = {
         params: {
           lat: $scope.myLat,
           long: $scope.myLng,
-          n: 10
+          n: 100
         }
       };
 
-      $http.get('http://192.168.1.76:5000/api/bike_parking', config)
-      //$http.get('js/services/test.json')
-        .success(function(response) {
-          console.log('got nearby parking.');
-          console.log(response);
+      $http.get('http://192.168.1.30:5001/api/bike_parking', config)
+        .success(function(parkingSpots) {
+          var key = 0;
 
+          parkingSpots.forEach(function(parkingSpot) {
+            $scope.markers[key] = {
+              lat: parkingSpot.LAT_LONG[0],
+              lng: parkingSpot.LAT_LONG[1],
+              message: '<strong>' + parkingSpot.LOCATION_NAME + '</strong><br/>' +
+                        parkingSpot.ADDRESS + '<br/><br/><strong>' + parkingSpot.SPACES + '</strong> Spaces, <strong>' +
+                        parkingSpot.RACKS + '</strong> Rack' + (parkingSpot.RACKS > 1 ? 's' : ''),
+              focus: false,
+              draggable: false
+            };
+            $scope.markers[key].icon = bikeIcon;
+            key++;
+          });
+
+          modalInstance.close();
+        })
+        .error(function() {
+          modalInstance.close();
         });
-
-      var key = '1';
-      $scope.markers[key] = {
-        lat: 37.74883300,
-        lng: -122.41772000,
-        message: 'Paisano\'s',
-        focus: false,
-        draggable: false
-      };
-      $scope.markers[key].icon = bikeIcon;
-
-      key = '2';
-      $scope.markers[key] = {
-        lat: 37.74849700,
-        lng: -122.41866200,
-        message: 'Mermaid Tattoo',
-        focus: false,
-        draggable: false
-      };
-      $scope.markers[key].icon = bikeIcon;
-
-      key = '3';
-      $scope.markers[key] = {
-        lat: 37.74785345,
-        lng: -122.41817051,
-        message: 'Carecen',
-        focus: false,
-        draggable: false
-      };
-      $scope.markers[key].icon = bikeIcon;
-
-      key = '4';
-      $scope.markers[key] = {
-        lat: 37.74751200,
-        lng: -122.41830800,
-        message: 'medical building',
-        focus: false,
-        draggable: false
-      };
-      $scope.markers[key].icon = bikeIcon;
-
-      key = '5';
-      $scope.markers[key] = {
-        lat: 37.74764800,
-        lng: -122.41944900,
-        message: 'Career Link Center',
-        focus: false,
-        draggable: false
-      };
-      $scope.markers[key].icon = bikeIcon;
-
-      key = '6';
-      $scope.markers[key] = {
-        lat: 37.74699800,
-        lng: -122.41865300,
-        message: 'Coffee Shop',
-        focus: false,
-        draggable: false
-      };
-      $scope.markers[key].icon = bikeIcon;
-
     };
 
 
@@ -180,7 +134,7 @@ angular.module('sfBikeDock')
       $scope.sanfrancisco.lng = $scope.myLng;
       $scope.sanfrancisco.zoom = 18;
 
-      modalInstance.close();
+      $scope.statusMessage = 'Finding nearby bike parking...';
 
       findNearByParking();
     };
@@ -198,101 +152,36 @@ angular.module('sfBikeDock')
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
 
+      $scope.statusMessage = 'Finding your location...';
+
       modalInstance = $modal.open({
         templateUrl: 'views/startup.html',
         controller: 'ModalStartupCtrl',
+        resolve: {
+          message: function () {
+            return $scope.statusMessage;
+          }
+        },
         size: 'sm'
       });
+/*
+      modalInstance.result.then(function(bikeParking) {
+
+      });
+*/
     }
     else {
       alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser that supports it.');
     }
 
-
-
-/*
-    //*******************************
-    // Old Code from Bayes Impact
-    //*******************************
-
-    var incidentsDict = {};
-
-    var addLocationToMap = function(data, location) {
-
-      var incidents = data[location];
-
-      var incidentsString = '';
-      var violenceLevel = 0;
-
-      for(var i=0; i < incidents.length; i++) {
-        incidentsString += incidentsDict[incidents[i]].inc_offense;  //jshint ignore:line
-
-        if(incidentsDict[incidents[i]].violence_level === '1') {  //jshint ignore:line
-          incidentsString += ' *<br/>';
-        }
-        else if(incidentsDict[incidents[i]].violence_level === '2') {  //jshint ignore:line
-          incidentsString += ' **<br/>';
-        }
-        else if(incidentsDict[incidents[i]].violence_level === '3') {  //jshint ignore:line
-          incidentsString += ' ***<br/>';
-        }
-
-        violenceLevel += parseInt(incidentsDict[incidents[i]].violence_level);  //jshint ignore:line
-      }
-
-      var message = '<strong>' + location + ', Total Violence Level: ' + violenceLevel + '</strong><br/><br/>';
-
-      message += incidentsString;
-
-      geocode.latLngForAddress(location + ', High Point, NC').then(function(address) { //jshint ignore:line
-
-        var key = location.replace(/-/g, ' '); //jshint ignore:line
-
-        $scope.markers[key] = {
-          lat: address.lat,
-          lng: address.lng,
-          message: message,
-          focus: false,
-          draggable: false
-        };
-
-        if(violenceLevel <= 10) {
-          $scope.markers[key].icon = lowIcon;
-        }
-        else if(violenceLevel > 10 && violenceLevel <= 20) {
-          $scope.markers[key].icon = mediumIcon;
-        }
-        else if(violenceLevel > 20) {
-          $scope.markers[key].icon = highIcon;
-        }
-
-      });
-
-    };
-
-
-    dataloader.fetch('incidents_dict').then(function(data) {
-      incidentsDict = data;
-
-      //Load file data to place locations on the map.
-      dataloader.fetch('_top_incidents_per_address').then(function(data) {
-        for(var object in data) {
-          addLocationToMap(data, object);
-        }
-      });
-
-    });
-*/
-
-
   }
 )
 .controller('ModalStartupCtrl',
-  function ($scope, $modalInstance) {
+  function ($scope, $modalInstance, message) {
+    $scope.message = message;
 
     $scope.cancel = function() {
-      $modalInstance.close();
+      $modalInstance.dismiss('cancel');;
     };
-
   }
 );
