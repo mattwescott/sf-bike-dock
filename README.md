@@ -33,10 +33,10 @@ docker build -t mattwescott/bike-dock-ml -f Dockerfile.ml .
 docker build -t mattwescott/bike-dock-web -f Dockerfile.web .
 ```
 
-### Run the Images in Local Containers
+### Run the Images in (Local) Containers
 ```
-docker run -d -p 5002:5002 --name sf-bike-dock-ml mattwescott/bike-dock-ml
-docker run -d -p 80:3000 --name sf-bike-dock-web mattwescott/bike-dock-web
+docker run -d --name sf-bike-dock-ml mattwescott/bike-dock-ml
+docker run -d -p 80:3000 --link sf-bike-dock-ml:ml-server --name sf-bike-dock-web mattwescott/bike-dock-web
 ```
 
 
