@@ -52,6 +52,9 @@
 			{% block content %}{% endblock %}
 		</section>
 	</section>
+  <div class="footer">
+    <span>Built by <strong>Nick and Two Matts</strong></span>
+  </div>
 
 	<!--Embedding The User Object-->
 	<script type="text/javascript">
@@ -62,6 +65,8 @@
 	{% for jsFile in jsFiles %}
 		<script type="text/javascript" src="{{jsFile}}"></script>
 	{% endfor %}
+
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->

@@ -4,6 +4,7 @@
 angular.module('users').config(['$stateProvider',
 	function($stateProvider) {
 		// Users state routing
+    /*
 		$stateProvider.
 		state('profile', {
 			url: '/settings/profile',
@@ -41,5 +42,6 @@ angular.module('users').config(['$stateProvider',
 			url: '/password/reset/:token',
 			templateUrl: 'modules/users/views/password/reset-password.client.view.html'
 		});
+    */
 	}
 ]);

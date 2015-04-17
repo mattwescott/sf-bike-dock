@@ -1,4 +1,4 @@
-# Docker Info
+# Python / ML Component
 
 ## Install Python packages
 pip install -r requirements.txt
@@ -6,12 +6,16 @@ pip install -r requirements.txt
 ## Start the web api
 python webapi.py runserver
 
+
+
+# Web Server Component
+
 ## Angular App
-To run the Angular app (stand-alone), first install dependencies using 'bower install'.
+To run the Angular app (stand-alone), first install dependencies using:
+npm install
 
-Then, serve the 'public' folder with a webserver. One easy way is with python's SimpleHTTPServer:
-python -m SimpleHTTPServer 8000
-
+Then, run the app using:
+grunt
 
 
 
