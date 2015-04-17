@@ -83,7 +83,8 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
       };
 
       //TODO: fish: change url...
-      $http.get('/api/bike_parking', config)
+      //$http.get('/api/bike_parking', config)
+      $http.get('http://192.168.59.103:5002/api/bike_parking', config)
         .success(function(parkingSpots) {
           var key = 0;
 
