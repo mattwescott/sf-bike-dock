@@ -15,10 +15,10 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.debug=True
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return app.send_static_file('index.html')
+#matt h: remove web app route
+#@app.route('/', methods=['GET'])
+#def index():
+#    return app.send_static_file('index.html')
 
 
 def load_data_from_S3():
@@ -67,9 +67,10 @@ def lookup_nearest_spots(lat, lng, n):
     return bike_df.iloc[idx].to_json(orient='records')
 
 
-@app.route('/')
-def root():
-    return app.send_static_file('index.html')
+#matt h: remove web app route
+#@app.route('/')
+#def root():
+#    return app.send_static_file('index.html')
 
 
 @app.route('/api/bike_parking', methods=['GET'])

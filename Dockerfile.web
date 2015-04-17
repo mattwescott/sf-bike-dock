@@ -1,7 +1,26 @@
-FROM continuumio/miniconda
-RUN apt-get install -y python-pip
-RUN pip install flask flask-cors flask-script flask-bootstrap geopy
-ADD . /code
-WORKDIR /code
-EXPOSE 5002
-CMD python webapi.py runserver --port 5002 --host 0.0.0.0
+FROM dockerfile/nodejs
+
+WORKDIR /home/sf-bike-dock
+
+# Install Prerequisites
+RUN npm install -g grunt-cli
+RUN npm install -g bower
+
+# Install packages
+ADD package.json /home/sf-bike-dock/package.json
+RUN npm install
+
+# Manually trigger bower. Why doesnt this work via npm install?
+ADD .bowerrc /home/sf-bike-dock/.bowerrc
+ADD bower.json /home/sf-bike-dock/bower.json
+RUN bower install --config.interactive=false --allow-root
+
+# Make everything available for start
+ADD . /home/sf-bike-dock
+
+# currently only works for development -- Do I need this?
+ENV NODE_ENV development
+
+# Port 3000 for server
+EXPOSE 3000
+CMD ["grunt"]

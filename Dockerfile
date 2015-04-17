@@ -1,3 +1,6 @@
+# ******************** NOT IN USE **********************
+# Original Dockerfile for a single container app.
+
 FROM continuumio/miniconda
 RUN apt-get install -y python-pip
 RUN pip install flask flask-cors flask-script flask-bootstrap geopy
