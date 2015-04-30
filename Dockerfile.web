@@ -1,4 +1,5 @@
-FROM dockerfile/nodejs
+FROM node:0.10
+#FROM dockerfile/nodejs
 
 WORKDIR /home/sf-bike-dock
 
