@@ -4,7 +4,18 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'sf-bike-dock';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils', 'ngStorage', 'leaflet-directive'];
+	var applicationModuleVendorDependencies = [
+    'ngAnimate',
+    'ngCookies',
+    'ngResource',
+    'ngRoute',
+    'ngSanitize',
+    'ngTouch',
+    'ui.router',
+    'ui.bootstrap',
+    'ngStorage',
+    'leaflet-directive'
+  ];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
