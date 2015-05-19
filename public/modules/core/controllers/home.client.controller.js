@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$http', '$modal', '$scope', 'Authentication', 'Logger',
-  function($http, $modal, $scope, Authentication, Logger) {
+angular.module('core').controller('HomeController', ['$http', '$modal', '$scope', '$timeout', 'Authentication', 'Logger',
+  function($http, $modal, $scope, $timeout, Authentication, Logger) {
     $scope.authentication = Authentication;
 
     //*******************************
@@ -24,13 +24,14 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
     };
 
     var modalInstance;
+    var initialized = false;
 
     $scope.markers = {};
 
     $scope.init = function() {
       //Maps
       angular.extend($scope, {
-        sanfrancisco: {
+        mapinfo: {
           lat: 37.77,
           lng: -122.42,
           zoom: 13
@@ -68,6 +69,52 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
           },
           */
         }
+      });
+
+      /* Events:
+          click, dblclick,
+          mousedown, mouseup, mouseover, mouseout, mousemove,
+          contextmenu,
+          focus, blur,
+          preclick,
+          load, unload,
+          viewreset,
+          movestart, move, moveend,
+          dragstart, drag, dragend,
+          zoomstart, zoomend, zoomlevelschange,
+          resize,
+          autopanstart,
+          layeradd, layerremove, baselayerchange,
+          overlayadd, overlayremove,
+          locationfound, locationerror,
+          popupopen, popupclose
+
+      */
+
+      $scope.$on('leafletDirectiveMap.dragend', function(event){
+        if(!initialized) return;
+
+        Logger.activity('pan-map', {}, $scope.myLng, $scope.myLat);
+
+        //Re-center and request.
+        $timeout(function() {
+          $scope.myLat = $scope.mapinfo.lat;
+          $scope.myLng = $scope.mapinfo.lng;
+
+          findNearByParking();
+        });
+      });
+
+      $scope.$on('leafletDirectiveMap.zoomend', function(event){
+        if(!initialized) return;
+
+        Logger.activity('zoom-map', {}, $scope.myLng, $scope.myLat);
+
+        //Re-center and request.
+        $scope.myLat = $scope.mapinfo.lat;
+        $scope.myLng = $scope.mapinfo.lng;
+
+        findNearByParking();
       });
 
       if(navigator.geolocation) {
@@ -115,6 +162,7 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
       $http.get('/api/bike_parking', config)
         .success(function(parkingSpots) {
           var key = 0;
+          initialized = true;
 
           Logger.activity('request-parking-success', { spotsFound: parkingSpots.length }, $scope.myLng, $scope.myLat);
 
@@ -158,9 +206,9 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
       };
       $scope.markers.me.icon = meIcon;
 
-      $scope.sanfrancisco.lat = $scope.myLat;
-      $scope.sanfrancisco.lng = $scope.myLng;
-      $scope.sanfrancisco.zoom = 18;
+      $scope.mapinfo.lat = $scope.myLat;
+      $scope.mapinfo.lng = $scope.myLng;
+      $scope.mapinfo.zoom = 18;
 
       $scope.statusMessage = 'Finding nearby bike parking...';
 

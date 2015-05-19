@@ -32,10 +32,8 @@ ADD gruntfile.js /home/sf-bike-dock/
 ADD .csslintrc /home/sf-bike-dock/
 ADD .jshintrc /home/sf-bike-dock/
 
-# currently only works for development...
-ENV NODE_ENV development
+ENV NODE_ENV docker
 
 # Port 3000 for server
-# Add Port 35729 for livereload
 EXPOSE 3000
 CMD ["grunt"]

@@ -18,26 +18,28 @@ exports.index = function(req, res) {
 exports.getBikeParking = function(req, res) {
   //TODO: Extract the port number from the following docker env var:
   //         process.env.ML_SERVER_PORT=tcp://172.17.0.38:5002
+  //
+  // URL: http://ml-server:5002/api/bike_parking?lat=37.748918599999996&long=-122.41816180000001&n=100
+  //
 
   var urlPath = '/api/bike_parking?' + querystring.stringify(req.query);
 
-  //http://ml-server:5002/api/bike_parking?lat=37.748918599999996&long=-122.41816180000001&n=100
-  /* mateo: fish: Dev
   var options = {
       host: 'ml-server',  //<<<< This server name comes from a Docker link env var.
       port: 5002,
       path: urlPath,
       method: 'GET'
   };
-  */
 
-  //fish: For dev.
-  var options = {
+  //fish: for dev
+  /*
+  options = {
       host: '127.0.0.1',
       port: 5000,
       path: urlPath,
       method: 'GET'
   };
+  */
 
   var innerReq = http.request(options, function(innerRes) {
     //console.log('STATUS: ' + innerRes.statusCode);
