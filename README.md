@@ -36,6 +36,6 @@ docker build -t mattwescott/bike-dock-web -f Dockerfile.web .
 ### Run the Images (and Mongo) in (Local) Containers
 ```
 docker run -d --name mongodb -p 27017:27017 mongo
-docker run -d --name sf-bike-dock-ml mattwescott/bike-dock-ml
-docker run -d --name sf-bike-dock-web -p 80:3000 --link sf-bike-dock-ml:ml-server --link mongodb:db_1 mattwescott/bike-dock-web
+docker run -d --name bike-dock-ml mattwescott/bike-dock-ml
+docker run -d --name bike-dock-web -p 80:3000 --link bike-dock-ml:ml-server --link mongodb:db_1 mattwescott/bike-dock-web
 ```
