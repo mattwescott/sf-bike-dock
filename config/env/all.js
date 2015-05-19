@@ -3,8 +3,8 @@
 module.exports = {
 	app: {
 		title: 'Bike Dock',
-		description: 'Find Bike Parking in San Francisco',
-		keywords: 'Bike Bicycle Parking Racks San Francisco'
+		description: 'Find Nearby Bike Parking',
+		keywords: 'Bike Bicycle Parking Racks Nearby Location'
 	},
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',
@@ -60,6 +60,8 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				//'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
+        'public/lib/re-tree/re-tree.min.js',
+        'public/lib/ng-device-detector/ng-device-detector.min.js',
         'public/lib/leaflet/dist/leaflet.js',
         'public/lib/leaflet/dist/leaflet-src.js',
         'public/lib/angular-leaflet-directive/dist/angular-leaflet-directive.js',

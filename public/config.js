@@ -14,7 +14,8 @@ var ApplicationConfiguration = (function() {
     'ui.router',
     'ui.bootstrap',
     'ngStorage',
-    'leaflet-directive'
+    'leaflet-directive',
+    'ng.deviceDetector'
   ];
 
 	// Add a new vertical module

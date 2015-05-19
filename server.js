@@ -13,7 +13,6 @@ var init = require('./config/init')(),
  */
 
 // Bootstrap db connection
-/* mateo: No DB Yet...
 var db = mongoose.connect(config.db.uri, config.db.options, function(err) {
 	if (err) {
 		console.error(chalk.red('Could not connect to MongoDB!'));
@@ -25,11 +24,9 @@ mongoose.connection.on('error', function(err) {
 	process.exit(-1);
 	}
 );
-*/
 
 // Init the express application
-//mateo: var app = require('./config/express')(db);
-var app = require('./config/express')();
+var app = require('./config/express')(db);
 
 // Bootstrap passport config
 require('./config/passport')();

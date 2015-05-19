@@ -1,9 +1,9 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$http', '$modal', '$scope', 'Authentication',
-	function($http, $modal, $scope, Authentication) {
-		$scope.authentication = Authentication;
+angular.module('core').controller('HomeController', ['$http', '$modal', '$scope', 'Authentication', 'Logger',
+  function($http, $modal, $scope, Authentication, Logger) {
+    $scope.authentication = Authentication;
 
     //*******************************
     // Map Handling
@@ -23,50 +23,78 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
         size: 'm'
     };
 
+    var modalInstance;
 
     $scope.markers = {};
 
-    //Maps
-    angular.extend($scope, {
-      sanfrancisco: {
-        lat: 37.77,
-        lng: -122.42,
-        zoom: 13
-      },
-      layers: {
-        baselayers: {
-          googleRoadmap: {
-            name: 'Google Streets',
-            layerType: 'ROADMAP',
-            type: 'google'
-          },
-          googleHybrid: {
-            name: 'Google Hybrid',
-            layerType: 'HYBRID',
-            type: 'google'
-          },
-          googleTerrain: {
-            name: 'Google Terrain',
-            layerType: 'TERRAIN',
-            type: 'google'
-          },
+    $scope.init = function() {
+      //Maps
+      angular.extend($scope, {
+        sanfrancisco: {
+          lat: 37.77,
+          lng: -122.42,
+          zoom: 13
+        },
+        layers: {
+          baselayers: {
+            googleRoadmap: {
+              name: 'Google Streets',
+              layerType: 'ROADMAP',
+              type: 'google'
+            },
+            googleHybrid: {
+              name: 'Google Hybrid',
+              layerType: 'HYBRID',
+              type: 'google'
+            },
+            googleTerrain: {
+              name: 'Google Terrain',
+              layerType: 'TERRAIN',
+              type: 'google'
+            },
+            /*
+            osm: {
+              name: 'OpenStreetMap',
+              url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              type: 'xyz'
+            },
+            */
+          }
           /*
-          osm: {
-            name: 'OpenStreetMap',
-            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            type: 'xyz'
+          legend: {
+            position: 'bottomleft',
+            colors: [ '#d04e4b', '#4394dd', '#9dbad0' ],
+            labels: [ 'Very High', 'High', 'Medium' ]
           },
           */
         }
+      });
+
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+
+        $scope.statusMessage = 'Finding your location...';
+
+        modalInstance = $modal.open({
+          templateUrl: 'modules/core/views/startup.html',
+          controller: 'ModalStartupCtrl',
+          resolve: {
+            message: function () {
+              return $scope.statusMessage;
+            }
+          },
+          size: 'sm'
+        });
         /*
-        legend: {
-          position: 'bottomleft',
-          colors: [ '#d04e4b', '#4394dd', '#9dbad0' ],
-          labels: [ 'Very High', 'High', 'Medium' ]
-        },
+        modalInstance.result.then(function(bikeParking) {
+
+        });
         */
       }
-    });
+      else {
+        alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser that supports it.');
+      }
+    };
 
 
     //*******************************
@@ -82,9 +110,13 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
         }
       };
 
+      Logger.activity('request-parking', { config: config }, $scope.myLng, $scope.myLat);
+
       $http.get('/api/bike_parking', config)
         .success(function(parkingSpots) {
           var key = 0;
+
+          Logger.activity('request-parking-success', { spotsFound: parkingSpots.length }, $scope.myLng, $scope.myLat);
 
           parkingSpots.forEach(function(parkingSpot) {
             $scope.markers[key] = {
@@ -102,7 +134,8 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
 
           modalInstance.close();
         })
-        .error(function() {
+        .error(function(error) {
+          Logger.activity('request-parking-error', { error: error }, $scope.myLng, $scope.myLat);
           modalInstance.close();
         });
     };
@@ -138,45 +171,20 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
     function errorFunction(error) {
       console.log('Error getting location:');
       console.log(error);
+      Logger.activity('get-location-error', { error: error });
       modalInstance.close();
     }
 
 
-    var modalInstance;
 
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
-
-      $scope.statusMessage = 'Finding your location...';
-
-      modalInstance = $modal.open({
-        templateUrl: 'modules/core/views/startup.html',
-        controller: 'ModalStartupCtrl',
-        resolve: {
-          message: function () {
-            return $scope.statusMessage;
-          }
-        },
-        size: 'sm'
-      });
-/*
-      modalInstance.result.then(function(bikeParking) {
-
-      });
-*/
-    }
-    else {
-      alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser that supports it.');
-    }
-
-
-	}
+  }
 ])
-.controller('ModalStartupCtrl', ['$scope', '$modalInstance', 'message',
-  function ($scope, $modalInstance, message) {
+.controller('ModalStartupCtrl', ['$scope', '$modalInstance', 'Logger', 'message',
+  function ($scope, $modalInstance, Logger, message) {
     $scope.message = message;
 
     $scope.cancel = function() {
+      Logger.activity('request-parking-canceled', { error: { message: 'User canceled.' } }, $scope.myLng, $scope.myLat);
       $modalInstance.dismiss('cancel');
     };
   }

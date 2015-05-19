@@ -1,12 +1,11 @@
-<section data-ng-controller="HomeController">
-  <div class="row">
-    <div class="col-md-12">
-      <leaflet center="sanfrancisco"
+<section class="fullHeight" data-ng-controller="HomeController" data-ng-init="init()">
+  <div class="row fullHeight">
+    <div class="col-md-12 fullHeight">
+      <leaflet id="map"
+               center="sanfrancisco"
                markers="markers"
                layers="layers"
-               legend="legend"
-               height="600px"
-               width="100%">
+               legend="legend">
       </leaflet>
     </div>
   </div>

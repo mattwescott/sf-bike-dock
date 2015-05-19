@@ -99,7 +99,6 @@ module.exports = function(db) {
 	app.use(cookieParser());
 
 	// Express MongoDB session storage
-  /* mateo - no db yet...
 	app.use(session({
 		saveUninitialized: true,
 		resave: true,
@@ -115,7 +114,6 @@ module.exports = function(db) {
 	// use passport session
 	app.use(passport.initialize());
 	app.use(passport.session());
-  */
 
 	// connect flash for flash messages
 	app.use(flash());
