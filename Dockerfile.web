@@ -28,14 +28,16 @@ ADD public/config.js /home/sf-bike-dock/public/
 ADD public/humans.txt /home/sf-bike-dock/public/
 ADD public/robots.txt /home/sf-bike-dock/public/
 
-ADD public/dist /home/sf-bike-dock/public/dist/
-
-
 ADD gruntfile.js /home/sf-bike-dock/
 ADD .csslintrc /home/sf-bike-dock/
 ADD .jshintrc /home/sf-bike-dock/
 
 ENV NODE_ENV docker
+
+RUN grunt build
+
+ADD public/dist /home/sf-bike-dock/public/dist/
+
 
 # Port 3000 for server
 EXPOSE 3000
