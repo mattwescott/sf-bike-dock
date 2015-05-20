@@ -23,10 +23,13 @@ ADD server.js /home/sf-bike-dock/
 
 ADD public/js /home/sf-bike-dock/public/js/
 ADD public/modules /home/sf-bike-dock/public/modules/
-ADD public/application.js /home/sf-bike-dock/public/
+# ADD public/application.js /home/sf-bike-dock/public/
 ADD public/config.js /home/sf-bike-dock/public/
 ADD public/humans.txt /home/sf-bike-dock/public/
 ADD public/robots.txt /home/sf-bike-dock/public/
+
+ADD public/dist /home/sf-bike-dock/public/dist/
+
 
 ADD gruntfile.js /home/sf-bike-dock/
 ADD .csslintrc /home/sf-bike-dock/

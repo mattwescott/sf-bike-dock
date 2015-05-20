@@ -10,26 +10,43 @@ module.exports = {
 	},
 	log: {
 		// Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
-		format: 'combined',
+		format: 'dev',
 		// Stream defaults to process.stdout
 		// Uncomment to enable logging to a log on the file system
 		options: {
-			stream: 'access.log'
+			//stream: 'access.log'
 		}
 	},
   assets: {
     lib: {
       css: [
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
-        'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+        //'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+        'public/lib/leaflet/dist/leaflet.css',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css',
       ],
       js: [
+        'public/lib/jquery/dist/jquery.min.js',
         'public/lib/angular/angular.min.js',
         'public/lib/angular-resource/angular-resource.min.js',
         'public/lib/angular-animate/angular-animate.min.js',
+        'public/lib/angular-cookies/angular-cookies.js',
+        'public/lib/angular-route/angular-route.js',
+        'public/lib/angular-sanitize/angular-sanitize.js',
+        'public/lib/angular-touch/angular-touch.js',
         'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-        'public/lib/angular-ui-utils/ui-utils.min.js',
-        'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        //'public/lib/angular-ui-utils/ui-utils.min.js',
+        'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+        'public/lib/re-tree/re-tree.min.js',
+        'public/lib/ng-device-detector/ng-device-detector.min.js',
+        'public/lib/leaflet/dist/leaflet.js',
+        'public/lib/leaflet/dist/leaflet-src.js',
+        'public/lib/angular-leaflet-directive/dist/angular-leaflet-directive.js',
+        'public/lib/ngstorage/ngStorage.js',
+        'public/lib/underscore/underscore.js',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js',
+        'public/lib/leaflet-plugins/layer/tile/Google.js',
+        'public/js/Leaflet.MakiMarkers.js',
       ]
     },
     css: 'public/dist/application.min.css',

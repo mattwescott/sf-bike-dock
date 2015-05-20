@@ -27,7 +27,7 @@ body {
   padding-top: 20px;
 }
 
-html, body, #map {
+html, body {
    height: 100%;
 }
 
@@ -78,7 +78,7 @@ html, body, #map {
     padding-bottom: 66px;
   }
   .content {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
   .footer {
     padding-top: 4px;
