@@ -94,7 +94,14 @@ module.exports = function(grunt) {
 					ext: 'js,html',
 					watch: watchFiles.serverViews.concat(watchFiles.serverJS)
 				}
-			}
+			},
+      docker: {
+        script: 'server.js',
+        options: {
+          ext: 'js,html',
+          watch: watchFiles.serverViews.concat(watchFiles.serverJS)
+        }
+      }
 		},
 		'node-inspector': {
 			custom: {
@@ -118,6 +125,7 @@ module.exports = function(grunt) {
 		},
 		concurrent: {
 			default: ['nodemon', 'watch'],
+      docker: ['nodemon:docker'],
 			debug: ['nodemon', 'watch', 'node-inspector'],
 			options: {
 				logConcurrentOutput: true,
@@ -163,6 +171,9 @@ module.exports = function(grunt) {
 
 	// Default task(s).
 	grunt.registerTask('default', ['lint', 'concurrent:default']);
+
+  // Run in Docker task.
+  grunt.registerTask('docker', ['concurrent:docker']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);
