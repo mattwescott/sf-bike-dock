@@ -34,6 +34,11 @@ ADD .jshintrc /home/sf-bike-dock/
 
 RUN grunt build
 
+RUN grunt build
+
+ADD public/dist /home/sf-bike-dock/public/dist/
+
+
 # Port 3000 for server
 EXPOSE 3000
 ENV NODE_ENV docker
