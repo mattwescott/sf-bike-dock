@@ -1,5 +1,4 @@
 FROM node:0.10
-#FROM dockerfile/nodejs
 
 WORKDIR /home/sf-bike-dock
 
@@ -33,11 +32,6 @@ ADD .csslintrc /home/sf-bike-dock/
 ADD .jshintrc /home/sf-bike-dock/
 
 RUN grunt build
-
-RUN grunt build
-
-ADD public/dist /home/sf-bike-dock/public/dist/
-
 
 # Port 3000 for server
 EXPOSE 3000
