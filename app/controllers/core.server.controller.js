@@ -33,9 +33,9 @@ exports.getBikeParking = function(req, res) {
 
   //fish: for dev
   /*
-  options = {
+  var options = {
       host: '127.0.0.1',
-      port: 5000,
+      port: 5002,
       path: urlPath,
       method: 'GET'
   };

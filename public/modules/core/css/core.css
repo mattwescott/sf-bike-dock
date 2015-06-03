@@ -68,6 +68,21 @@ html, body {
   height: 100%;
 }
 
+.bikeButton {
+  background: url('../img/brand/bike-grey.png') no-repeat left center;
+  background-origin: content-box;
+  padding-left: 15px;
+  padding-top: 17px;
+  height: 48px;
+  cursor: pointer;
+}
+
+.bikeButton:hover {
+  background: url('../img/brand/bike-white.png') no-repeat left center;
+  background-origin: content-box;
+}
+
+
 /* Customize container */
 /* mateo - added these */
 @media (min-width: 400px) {

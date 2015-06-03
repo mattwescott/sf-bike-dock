@@ -91,7 +91,7 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
 
       */
 
-      $scope.$on('leafletDirectiveMap.dragend', function(event){
+      $scope.$on('leafletDirectiveMap.dragend', function(event) {
         if(!initialized) return;
 
         Logger.activity('pan-map', {}, $scope.myLng, $scope.myLat);
@@ -105,16 +105,19 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
         });
       });
 
-      $scope.$on('leafletDirectiveMap.zoomend', function(event){
+      $scope.$on('leafletDirectiveMap.zoomend', function(event) {
         if(!initialized) return;
 
         Logger.activity('zoom-map', {}, $scope.myLng, $scope.myLat);
 
-        //Re-center and request.
-        $scope.myLat = $scope.mapinfo.lat;
-        $scope.myLng = $scope.mapinfo.lng;
+        //If center changed, request new nearby parking.
+        if($scope.myLat !== $scope.mapinfo.lat || $scope.myLng !== $scope.mapinfo.lng) {
+          //Re-center and request.
+          $scope.myLat = $scope.mapinfo.lat;
+          $scope.myLng = $scope.mapinfo.lng;
 
-        findNearByParking();
+          findNearByParking();
+        }
       });
 
       if(navigator.geolocation) {
@@ -141,7 +144,8 @@ angular.module('core').controller('HomeController', ['$http', '$modal', '$scope'
       else {
         alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser that supports it.');
       }
-    };
+
+    }; //end init()
 
 
     //*******************************
