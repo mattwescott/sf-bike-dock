@@ -69,7 +69,7 @@ html, body {
 }
 
 .bikeButton {
-  background: url('../img/brand/bike-grey.png') no-repeat left center;
+  background: url('/modules/core/img/brand/bike-grey.png') no-repeat left center;
   background-origin: content-box;
   padding-left: 15px;
   padding-top: 17px;
@@ -78,7 +78,7 @@ html, body {
 }
 
 .bikeButton:hover {
-  background: url('../img/brand/bike-white.png') no-repeat left center;
+  background: url('/modules/core/img/brand/bike-white.png') no-repeat left center;
   background-origin: content-box;
 }
 
